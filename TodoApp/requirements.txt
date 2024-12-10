@@ -4,3 +4,6 @@ sqlalchemy ==2.0.36
 mysql.connector ==2.2.9
 mysqlclient
 mysql-connector-python
+emailvalidator
+passlib
+Bcrypt

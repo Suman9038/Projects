@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from typing import Union
 from datetime import datetime
 
@@ -23,6 +23,16 @@ class TaskResponse(BaseModel) :
     class config :
         orm_mode=True
 
+class CreateUser(BaseModel) :
+    username : EmailStr
+    password :str
+
+class UserResponse(BaseModel) :
+    username : str
+    id : int
+    created_at : datetime
+
 class UserLogin(BaseModel) :
-    pass
+    username : EmailStr
+    password : str
 

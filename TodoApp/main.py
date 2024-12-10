@@ -5,7 +5,7 @@ import mysql.connector
 from mysql.connector import errorcode
 import time
 from sqlalchemy.orm import Session
-from .routers import todos
+from .routers import todos,auth
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -32,6 +32,7 @@ app=FastAPI()
 
 
 app.include_router(todos.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def root() :

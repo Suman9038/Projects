@@ -1,4 +1,4 @@
-from fastapi import APIRouter,HTTPException,status,responses,Depends
+from fastapi import APIRouter,HTTPException,status,Response,Depends
 from sqlalchemy.orm import Session
 from ..import models,schema,database
 
@@ -41,3 +41,12 @@ def update_todo(todo_id : int , todo:schema.UpdateTask, db : Session = Depends(d
     db.refresh(updated_todo)
     print(updated_todo.is_complete)
     return updated_todo
+
+@router.delete("/todos/delete/{todo_id}",status_code= status.HTTP_204_NO_CONTENT)
+def delete_todo(todo_id : int ,db : Session = Depends(database.get_db)) :
+    deleted_todo = db.query(models.Task).filter(models.Task.id==todo_id).first()
+    if not deleted_todo : 
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The corresponding Todo not found with id:{todo_id}")
+    db.delete(deleted_todo)
+    db.commit()
+    return{"message" : "Todo Deleted Successfully"}
