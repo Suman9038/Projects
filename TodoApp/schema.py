@@ -9,11 +9,11 @@ class CreateTask(BaseModel) :
     is_complete : bool = False
 
 class UpdateTask(BaseModel) :
-    title : Union[str,None]
-    description : Union[str,None]
-    is_complete : Union[bool,None]
+    title : Union[str,None] = None
+    description : Union[str,None] = None 
+    is_complete : Union[bool,None] = None
 
-class TaskRsponse(BaseModel) :
+class TaskResponse(BaseModel) :
     id : int 
     title : str
     description : Union[str,None]
