@@ -7,3 +7,4 @@ mysql-connector-python
 emailvalidator
 passlib
 Bcrypt
+python-multipart-0.0.19
