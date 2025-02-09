@@ -8,13 +8,13 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 router = APIRouter(tags=["User Registrarion and Login"])
 
 @router.post("/register",response_model=schema.UserResponse)
-def user_registration(user : schema.CreateUser,db :Session=Depends(database.get_db)) :
+def user_registration(user : OAuth2PasswordRequestForm =Depends(),db :Session=Depends(database.get_db)) :
     hashed_password=utils.hash(user.password)
-    user.password=hashed_password
+    # user.password=hashed_password
     existing_user=db.query(models.User).filter(models.User.username==user.username).first()
     if existing_user :
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=f"Username is already exists try with new username")
-    new_user=models.User(**user.dict())
+    new_user=models.User(username=user.username , password= hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
