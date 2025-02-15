@@ -1,5 +1,5 @@
 from pydantic import BaseModel,EmailStr
-from typing import Union
+from typing import Union,Optional
 from datetime import datetime
 
 
@@ -39,3 +39,6 @@ class UserLogin(BaseModel) :
 class TokenResponse(BaseModel) :
     access_token : str
     token_type: str
+
+class TokenData(BaseModel) :
+    id: Union[int,None]=None

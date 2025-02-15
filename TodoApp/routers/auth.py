@@ -30,3 +30,9 @@ def user_login(user_credentials: OAuth2PasswordRequestForm =Depends(),db : Sessi
     
     access_token=oauth2.create_token(data={"user_id" : user.id})
     return{"access_token" : access_token , "token_type" : "bearer"}
+
+
+@router.get("/allusers",response_model=list[schema.UserResponse])
+def get_all_user(db: Session= Depends(database.get_db)) :
+    all_user= db.query(models.User).all()
+    return all_user
