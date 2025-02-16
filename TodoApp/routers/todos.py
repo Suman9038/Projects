@@ -1,6 +1,7 @@
 from fastapi import APIRouter,HTTPException,status,Response,Depends
 from sqlalchemy.orm import Session
-from ..import models,schema,database,oauth2
+from ..import models,schema,database,oauth2,priority_predection
+from typing import Optional
 
 
 
@@ -9,7 +10,8 @@ router=APIRouter()
 
 @router.post("/todos",response_model=schema.TaskResponse)
 def create_todo(todo :schema.CreateTask,db :Session=Depends(database.get_db),user_id: int= Depends(oauth2.fetch_logged_in_user)) :
-    new_todo = models.Task(**todo.dict())
+    priority= priority_predection.predict_priority(todo.description) # AI se prediction kar raha h and usme function mai jo user description dera h usko pass kar dere h 
+    new_todo = models.Task(user_id= user_id.id,priority=priority,**todo.dict())
     db.add(new_todo)
     db.commit()
     db.refresh(new_todo)
@@ -17,13 +19,19 @@ def create_todo(todo :schema.CreateTask,db :Session=Depends(database.get_db),use
     return new_todo
 
 @router.get("/todos",response_model=list[schema.TaskResponse])
-def get_todo(db :Session=Depends(database.get_db)) :
-    todos = db.query(models.Task).all()
+def get_todo(db :Session=Depends(database.get_db),limit:int =5,skip: int= 0,search: Optional[str]="") :
+    todos = db.query(models.Task).filter(models.Task.title.contains(search)).limit(limit).offset(skip).all()
     return todos
 
+@router.get("/user/todos",response_model=list[schema.TaskResponse])
+def get_todos_for_logged_users(db: Session= Depends(database.get_db),user_id: int= Depends(oauth2.fetch_logged_in_user),limit:int =5,skip: int= 0) :
+    logged_user_todos= db.query(models.Task).filter(models.Task.user_id== user_id.id).limit(limit).offset(skip).all()
+
+    return logged_user_todos
+
 @router.get("/todos/{todo_id}",response_model=list[schema.TaskResponse])
-def get_by_id(todo_id : int,db :Session=Depends(database.get_db),user_id: int= Depends(oauth2.fetch_logged_in_user)) :
-    one_todo = db.query(models.Task).filter(models.Task.id==todo_id).first()
+def get_by_id(todo_id : int,db :Session=Depends(database.get_db),user_id: int= Depends(oauth2.fetch_logged_in_user),search: Optional[str]="") :
+    one_todo = db.query(models.Task).filter(models.Task.id==todo_id).filter(models.Task.title.contains(search)).first()
     if not one_todo :
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Todo Not Found")
     return [one_todo]
@@ -43,8 +51,8 @@ def update_todo(todo_id : int , todo:schema.UpdateTask, db : Session = Depends(d
     return updated_todo
 
 @router.delete("/todos/delete/{todo_id}",status_code= status.HTTP_204_NO_CONTENT)
-def delete_todo(todo_id : int ,db : Session = Depends(database.get_db),user_id: int= Depends(oauth2.fetch_logged_in_user)) :
-    deleted_todo = db.query(models.Task).filter(models.Task.id==todo_id).first()
+def delete_todo(todo_id : int ,db : Session = Depends(database.get_db),user_id: int= Depends(oauth2.fetch_logged_in_user),search: Optional[str]="") :
+    deleted_todo = db.query(models.Task).filter(models.Task.id==todo_id).filter(models.Task.title.contains(search)).first()
     if not deleted_todo : 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"The corresponding Todo not found with id:{todo_id}")
     db.delete(deleted_todo)

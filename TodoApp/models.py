@@ -1,7 +1,7 @@
 from .database import Base
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.sql.expression import text
-from sqlalchemy import Column,Integer,String,Boolean
+from sqlalchemy import Column,Integer,String,Boolean,ForeignKey
 
 class User(Base) : 
     __tablename__="users"
@@ -20,3 +20,5 @@ class Task(Base) :
     description=Column(String(255),nullable=False,default="")
     created_at=(Column(TIMESTAMP,nullable=False,server_default=text('now()')))
     is_complete=Column(Boolean,default=False)
+    priority= Column(String(255),nullable=False,default="MEDIUM")
+    user_id= Column(Integer,ForeignKey("users.id",ondelete="CASCADE"),nullable=False)

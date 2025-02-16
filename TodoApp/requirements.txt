@@ -8,3 +8,8 @@ emailvalidator
 passlib
 Bcrypt
 python-jose
+python-dotenv
+pydantic_settings
+openai
+google-generativeai
+google-genai
