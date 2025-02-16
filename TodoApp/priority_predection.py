@@ -2,6 +2,7 @@
 from google import genai
 from dotenv import load_dotenv
 import os
+from .config import settings
 
 
 
@@ -11,7 +12,10 @@ import os
 #     raise ValueError("⚠️ OPENAI_API_KEY not found in environment variables!")
 
 # print(f"API Key Found: {api_key[:5]}**********") 
-client=genai.Client(api_key="AIzaSyBI31vzusPl4hblZg6Rih6qN15lvcnns5Q")
+# client=genai.Client(api_key="AIzaSyBI31vzusPl4hblZg6Rih6qN15lvcnns5Q")
+# print(settings.GEMINI_API_KEY)
+api_key= str(settings.GEMINI_API_KEY)
+client=genai.Client(api_key="api_key")
 
 def predict_priority(description: str) :
     prompt = f"""
