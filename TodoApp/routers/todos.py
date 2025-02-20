@@ -1,4 +1,4 @@
-from fastapi import APIRouter,HTTPException,status,Response,Depends
+from fastapi import APIRouter,HTTPException,status,Depends
 from sqlalchemy.orm import Session
 from ..import models,schema,database,oauth2,priority_predection
 from typing import Optional
@@ -43,7 +43,6 @@ def update_todo(todo_id : int , todo:schema.UpdateTask, db : Session = Depends(d
     if updated_todo is None :
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"THE CORRESPONDING TASK WITH ID = {todo_id} NOT PRESENT IN YOUR LIST")
     for key,value in todo.dict(exclude_unset=True).items() : # Key Value pair mai loop chalake jo user key value dega usi ko update karenge baki ko ignore 
-        # print(todo.dict(exclude_unset=True))
         setattr(updated_todo,key,value) # Specific Property set karta h ya update karta  h Python ka inbuilt funcn h 
     db.commit()
     db.refresh(updated_todo)

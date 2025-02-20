@@ -7,7 +7,6 @@ class Settings(BaseSettings) :
     DB_URL: str
     SECRET_KEY: str
     ALGORITHM: str
-    # OPENAI_API_KEY: str
     GEMINI_API_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
 

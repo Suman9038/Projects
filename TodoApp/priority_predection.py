@@ -1,19 +1,9 @@
-# import google.generativeai as genai
+
 from google import genai
 from dotenv import load_dotenv
 import os
 from .config import settings
 
-
-
-# load_dotenv()
-# api_key = os.getenv("GEMINI_API_KEY") 
-# if not api_key:
-#     raise ValueError("⚠️ OPENAI_API_KEY not found in environment variables!")
-
-# print(f"API Key Found: {api_key[:5]}**********") 
-# client=genai.Client(api_key="AIzaSyBI31vzusPl4hblZg6Rih6qN15lvcnns5Q")
-# print(settings.GEMINI_API_KEY)
 api_key= str(settings.GEMINI_API_KEY)
 client=genai.Client(api_key="api_key")
 
@@ -26,8 +16,4 @@ def predict_priority(description: str) :
     """
     response =client.models.generate_content(model="gemini-pro", contents=prompt)
     return response.text.strip().upper()
-
-# TEST FOR CHECHKING
-# task = "Finish the project report before the deadline."
-# priority = predict_priority(task)
-# print(priority)  
+ 
