@@ -18,6 +18,8 @@ class TaskResponse(BaseModel) :
     title : str
     description : Union[str,None]
     is_complete : bool 
+    priority: str
+    user_id: int
     created_at : datetime
 
     class config :
@@ -36,3 +38,9 @@ class UserLogin(BaseModel) :
     username : EmailStr
     password : str
 
+class TokenResponse(BaseModel) :
+    access_token : str
+    token_type: str
+
+class TokenData(BaseModel) :
+    id: Union[int,None]=None

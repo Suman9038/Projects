@@ -7,4 +7,9 @@ mysql-connector-python
 emailvalidator
 passlib
 Bcrypt
-python-multipart-0.0.19
+python-jose
+python-dotenv
+pydantic_settings
+openai
+google-generativeai
+google-genai

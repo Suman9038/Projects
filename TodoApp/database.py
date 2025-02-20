@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from .config import settings
 
-Database_URL="mysql://root:suman2003@localhost/todo"
+Database_URL=settings.DB_URL
 
 engine= create_engine(Database_URL)
 
