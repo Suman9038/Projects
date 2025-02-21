@@ -44,6 +44,12 @@ def update_todo(todo_id : int , todo:schema.UpdateTask, db : Session = Depends(d
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"THE CORRESPONDING TASK WITH ID = {todo_id} NOT PRESENT IN YOUR LIST")
     for key,value in todo.dict(exclude_unset=True).items() : # Key Value pair mai loop chalake jo user key value dega usi ko update karenge baki ko ignore 
         setattr(updated_todo,key,value) # Specific Property set karta h ya update karta  h Python ka inbuilt funcn h 
+
+        if key == "description":
+            new_priority = priority_predection.predict_priority(value)
+            setattr(updated_todo, "priority", new_priority)
+
+            
     db.commit()
     db.refresh(updated_todo)
     print(updated_todo.is_complete)

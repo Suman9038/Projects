@@ -23,8 +23,10 @@ def create_token(data: dict) :
 
 
 def verify_token(token: str, credential_exception) :
+    if not token : 
+        raise credential_exception # Agar token nahi hai toh user authenticated nahi hai
     try : 
-        decoded_jwt_token= jwt.decode(token,SECRET_KEY,algorithms=ALGORITHM)
+        decoded_jwt_token= jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
         id : str =decoded_jwt_token.get("user_id")
         if id is None :
             raise credential_exception
@@ -34,6 +36,7 @@ def verify_token(token: str, credential_exception) :
         raise credential_exception
     
     return token_data
+
 
 def fetch_logged_in_user(token: str = Depends(oauth2_scheme)) :
     credential_exception= HTTPException(status_code= status.HTTP_401_UNAUTHORIZED,

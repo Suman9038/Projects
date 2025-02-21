@@ -1,11 +1,8 @@
-
 from google import genai
-from dotenv import load_dotenv
-import os
 from .config import settings
 
 api_key= str(settings.GEMINI_API_KEY)
-client=genai.Client(api_key="api_key")
+client=genai.Client(api_key=api_key)
 
 def predict_priority(description: str) :
     prompt = f"""
